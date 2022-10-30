@@ -1,3 +1,5 @@
 {
-    "liveServer.settings.multiRootWorkspaceName": "testing_rxdart_examples"
+    "liveServer.settings.multiRootWorkspaceName": "testing_rxdart_examples",
+    "editor.defaultFormatter": "Dart-Code.dart-code",
+    "editor.formatOnSave": true
 }

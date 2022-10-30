@@ -19,11 +19,11 @@ class Api {
       return cachedResults;
     }
 
-    final persons = await _getJson('http://127.0.0.1:5500/api/animals.json')
+    final persons = await _getJson('http://127.0.0.1:5500/api/persons.json')
         .then((json) => json.map((value) => Person.fromJson(value)));
     _persons = persons.toList();
 
-    final animals = await _getJson('http://127.0.0.1:5500/api/persons.json')
+    final animals = await _getJson('http://127.0.0.1:5500/api/animals.json')
         .then((json) => json.map((value) => Animal.fromJson(value)));
     _animals = animals.toList();
 
@@ -35,7 +35,7 @@ class Api {
     final cachedPersons = _persons;
     final List<Thing> result = [];
 
-    if (cachedAnimals != null && cachedPersons != null) {
+    if (cachedPersons != null && cachedAnimals != null) {
       for (final animal in cachedAnimals) {
         if (animal.name.trimmedContaines(term) ||
             animal.type.name.trimmedContaines(term)) {

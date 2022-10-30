@@ -16,8 +16,10 @@ class Animal extends Thing {
   String toString() => 'Animal, name: $name, type: $type';
 
   factory Animal.fromJson(Map<String, dynamic> json) {
+    final jstr = json;
+    print(jstr);
     late final AnimalType type;
-    switch ((json["type "] as String).toLowerCase().trim()) {
+    switch ((json["type"] as String).toLowerCase().trim()) {
       case "rabbit":
         type = AnimalType.rabbit;
         break;
