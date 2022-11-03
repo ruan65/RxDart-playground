@@ -4,5 +4,6 @@
     "editor.formatOnSave": true,
     "[jsonc]": {
         "editor.defaultFormatter": "vscode.json-language-features"
-    }
+    },
+    "terminal.integrated.fontSize": 14
 }
