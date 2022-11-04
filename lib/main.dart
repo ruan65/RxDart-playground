@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'dart:developer' as devtools show log;
@@ -16,31 +18,67 @@ void main() {
   ));
 }
 
-void testIt() async {
-  final stream1 = Stream.periodic(const Duration(milliseconds: 1500),
-      (count) => 'Stream 1, count = $count');
-  final stream2 = Stream.periodic(const Duration(milliseconds: 1900),
-      (count) => 'Stream 2, count = $count');
-
-  final result = Rx.zip2(
-      stream1, stream2, (v1, v2) => 'Zipped result, A = ($v1) B = ($v2)');
-
-  await for (final value in result) {
-    value.log();
-  }
-}
-
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late final StreamController streamController;
+  late final Stream<String> streamOfStrings;
+
+  @override
+  void initState() {
+    super.initState();
+    streamController = StreamController<DateTime>();
+    streamOfStrings =
+        streamController.stream.switchMap((dateTime) => Stream.periodic(
+              const Duration(seconds: 1),
+              (count) => 'Stream count = $count, dateTime = $dateTime',
+            ));
+  }
+
+  @override
   Widget build(BuildContext context) {
-    testIt();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
       ),
-      body: Container(),
+      body: Column(
+        children: [
+          const Spacer(),
+          StreamBuilder<String>(
+              stream: streamOfStrings,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(snapshot.requireData);
+                } else {
+                  return const Text('Waiting for press....');
+                }
+              }),
+          const Spacer(),
+          TextButton(
+            onPressed: () {
+              streamController.add(DateTime.now());
+            },
+            child: const Center(
+              child: Text(
+                'Start the stream',
+                style: TextStyle(fontSize: 33),
+              ),
+            ),
+          ),
+          const Spacer(),
+        ],
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    streamController.close();
+    super.dispose();
   }
 }
