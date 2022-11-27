@@ -1,6 +1,6 @@
 Stream<int> intStream(int count) async* {
   for (int i in Iterable.generate(count)) {
-    if (i == 5) {
+    if (i == -1) {
       throw Exception('Intentional exception');
     } else {
       yield i + 1;
@@ -27,7 +27,23 @@ Future<int> countStream(Stream<int> stream) async {
 void main(List<String> args) async {
   final stream = intStream(36);
 
-  final sum = await countStream(stream);
+  // print(await stream.reduce((a, b) => a + b));
 
-  print('result: $sum');
+  var subs = stream.listen(
+    print,
+    onDone: () => print('done....'),
+  );
+
+  subs.onData((data) {
+    print('data: $data');
+  });
+
+  await Future.delayed(const Duration(milliseconds: 200));
+  subs.pause();
+  await Future.delayed(const Duration(milliseconds: 1200));
+  subs.resume();
+
+  // final sum = await countStream(stream);
+
+  // print('result: $sum');
 }
